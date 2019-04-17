@@ -11,7 +11,10 @@ This package was created to speed up the process of cleaning text for natural la
 ## Installation
 ```
 $ pip3 install aiotext
+$ pip3 install git+https://github.com/EricWiener/pycontractions
 ```
+Please note that pycontractions is specified as a dependency and will download from PyPi and work, but the branch I linked to above has multiple improvements. 
+
 
 ## Usage:
 ```python
@@ -57,3 +60,7 @@ python3
 >> import nltk
 >> nltk.download('wordnet')
 ```
+
+## Change log
+- 1.0.0: Initial release
+- 1.0.1: Corrected handling of sentences without punctuation and brackets

@@ -27,7 +27,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="aiotext",
-    version="1.0.0",
+    version="1.0.1",
     author="Eric Wiener",
     author_email="ericwiener3@gmail.com",
     description="All in one text processor and cleaner.",
