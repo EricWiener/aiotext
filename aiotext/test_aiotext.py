@@ -47,6 +47,10 @@ def test_aiotext():
             'other', 'cherish', 'very', 'nearly', 'the', 'same', 'feeling', 'towards', 'the', 'ocean', 'with', 'me']
     ]
 
+    text = "This is A sentence With wierd caps and no period"
+
+    assert cleaner.clean(text) == [['this', 'be', 'a', 'sentence', 'with', 'wierd', 'cap', 'and', 'no', 'period']]
+
     # Initialize cleaner
     cleaner_options = {
         "expand_contractions": True,
@@ -57,13 +61,13 @@ def test_aiotext():
 
     text = "This is a dog's bone. That's a cat. Here are some random people's possesives. This sentence doesn't make much sense. That's okay. Just want to give ya'll an example"
 
-    assert cleaner.clean(text) == [['this', 'be', 'a', 'dog', 'bone'], ['that', 'be', 'a', 'cat'], [
-        'here', 'be', 'some', 'random', 'people', 'possesives'], ['this', 'sentence', 'do', 'not', 'make', 'much', 'sense'], ['that', 'have', 'okay']]
+    print(cleaner.clean(text))
+    assert cleaner.clean(text) == [['this', 'be', 'a', 'dog', 'bone'], ['that', 'be', 'a', 'cat'], ['here', 'be', 'some', 'random', 'people', 'possesives'], ['this', 'sentence', 'do', 'not', 'make', 'much', 'sense'], ['that', 'have', 'okay'], ['just', 'want', 'to', 'give', 'yall', 'an', 'example']]
 
     text = "Now let's do it all (here's something). Oh look more-brackets {yep here's more}. You guessed it. This man's math is right-here [5 + 5 * (2 * 2)]. Doesn't this make everything easier."
 
-    assert cleaner.clean(text) == [['now', 'let', 'us', 'do', 'it', 'all'], [
-        'do', 'not', 'this', 'make', 'everything', 'easy']]
+    print(cleaner.clean(text))
+    assert cleaner.clean(text) == [['now', 'let', 'us', 'do', 'it', 'all'], ['oh', 'look', 'morebrackets'], ['you', 'guess', 'it'], ['this', 'man', 'math', 'be', 'righthere'], ['do', 'not', 'this', 'make', 'everything', 'easy']]
 
 
 test_aiotext()

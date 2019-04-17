@@ -38,6 +38,12 @@ def split_into_sentences(text):
     text = text.replace("<prd>", ".")
     text = re.sub(digits + "[.]" + digits, "\\1<prd>\\2", text)
     sentences = text.split("<stop>")
-    sentences = sentences[:-1]
-    sentences = [s.strip() for s in sentences]
-    return sentences
+    # sentences = sentences[:-1]
+
+    updated_sentences = []
+    for sentence in sentences:
+        cleaned = sentence.strip()
+        if len(cleaned) != 0:
+            updated_sentences.append(cleaned)
+
+    return updated_sentences

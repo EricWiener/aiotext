@@ -34,8 +34,35 @@ class Cleaner:
         # Remove strings in brackets
         # Eg. "This is a sentence (extra info) description."
         # Becomes "This is a sentence description."
-        text = re.sub('(\()(.*)(\))|(\[)(.*)(\])|(\{)(.*)(\})', '', text)
-        return text
+        """ Remove brackets from text
+            Matches (), [], {}
+
+            Converts:
+            'hello (there) you (my[best] friend) lets {dine } }' -> 'hello  you  lets  }'
+        """
+
+        brace_open_type = ""
+        brace_pair = {
+            '(': ')',
+            '[': ']',
+            '{': '}'
+        }
+        open_brace_list = list(brace_pair.keys())
+
+        res = ""
+        for c in text:
+            if len(brace_open_type) == 0:
+                # not opened
+                if c in open_brace_list:
+                    brace_open_type = c
+                else:
+                    res += c
+            else:
+                # opened
+                if brace_pair[brace_open_type] == c:
+                    brace_open_type = ""
+
+        return res
 
     def combine_concatenations(self, text):
         # convert concatenated words into seperate words
@@ -69,8 +96,13 @@ class Cleaner:
         # removes extra white spaces
         # stripped = re.sub('[ ]{2,}',' ', stripped)
 
-        strippedSentences = [re.sub('[ ]{2,}', ' ', re.sub('[^a-zA-Z\s]*', '', sentence)) for sentence in sentences]
-        return strippedSentences
+        stripped_sentences = []
+        for sentence in sentences:
+            cleaned = re.sub('[ ]{2,}', ' ', re.sub('[^a-zA-Z\s]*', '', sentence))
+            if len(cleaned) != 0:
+                stripped_sentences.append(cleaned)
+
+        return stripped_sentences
 
     def tokenize_sentences(self, sentences):
         # tokenize:
