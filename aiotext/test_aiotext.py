@@ -1,7 +1,7 @@
-from aoitext.aoitext import Cleaner
+from aiotext.aiotext import Cleaner
 
 
-def test_aoitext():
+def test_aiotext():
     """
     Test Cleaner. Run with pytest
     """
@@ -66,4 +66,4 @@ def test_aoitext():
         'do', 'not', 'this', 'make', 'everything', 'easy']]
 
 
-test_aoitext()
+test_aiotext()

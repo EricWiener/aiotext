@@ -10,12 +10,12 @@ This package was created to speed up the process of cleaning text for natural la
 
 ## Installation
 ```
-$ pip3 install aoitext
+$ pip3 install aiotext
 ```
 
 ## Usage:
 ```python
-import aoitext
+from aiotext import Cleaner
 
 text = "Call me Ishmael. Some years ago—never mind how long precisely—having "
 text += "little or no money in my purse, and nothing particular to interest me "

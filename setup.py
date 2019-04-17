@@ -26,14 +26,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="aoitext",
+    name="aiotext",
     version="1.0.0",
     author="Eric Wiener",
     author_email="ericwiener3@gmail.com",
     description="All in one text processor and cleaner.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/EricWiener/aoitext",
+    url="https://github.com/EricWiener/aiotext",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -44,7 +44,7 @@ setup(
         'pycontractions',
         'nltk',
     ],
-    packages=["aoitext"],
+    packages=["aiotext"],
     cmdclass={
         'install': InstallWrapper
     },

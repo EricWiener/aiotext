@@ -2,10 +2,10 @@ import os
 import argparse
 import json
 from pycontractions import Contractions  # expand contractions
-from aoitext.lemmatize import lemmatize
+from aiotext.lemmatize import lemmatize
 import re  # regex
 import string  # string helper Library
-from aoitext.splitToSentences import split_into_sentences
+from aiotext.splitToSentences import split_into_sentences
 import regex
 
 
