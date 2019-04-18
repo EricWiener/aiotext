@@ -13,7 +13,7 @@ This package was created to speed up the process of cleaning text for natural la
 $ pip3 install aiotext
 $ pip3 install git+https://github.com/EricWiener/pycontractions
 ```
-Please note that pycontractions is specified as a dependency and will download from PyPi and work, but the branch I linked to above has multiple improvements. 
+Please note that pycontractions is specified as a dependency and will download from PyPi and work, but the branch I linked to above has multiple improvements.
 
 
 ## Usage:
@@ -64,3 +64,4 @@ python3
 ## Change log
 - 1.0.0: Initial release
 - 1.0.1: Corrected handling of sentences without punctuation and brackets
+- 1.0.2: Added modified contraction expander download. Also made changes to solve [issue](https://github.com/nltk/nltk/issues/2269) with NLTK lemmatizer.

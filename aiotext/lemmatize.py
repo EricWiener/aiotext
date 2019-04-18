@@ -56,22 +56,29 @@ def lemmatize(tokens):
         ')': None,  # right parenthesis (], ), }, >)
         ',': None,  # comma (,)
         '.': None,  # sentence-final punc (. ! ?)
-        ':': None  # mid-sentence punc (: ; ... – -)
+        ':': None,  # mid-sentence punc (: ; ... – -)
     }
 
     lemmatizer = WordNetLemmatizer()
 
     # returns list of tuples (word, tag) - penn bank style
-    tagTuples = nltk.pos_tag(tokens)
+    tag_tuples = nltk.pos_tag(tokens)
 
     # converts penn bank to word net
-    wnTags = [(word, tag_map[tag]) for (word, tag) in tagTuples]
+    penn_keys = list(tag_map.keys())
+    wn_tags = []
+
+    for (word, tag) in tag_tuples:
+        if tag in penn_keys:
+            wn_tags.append((word, tag_map[tag]))
+        else:
+            wn_tags.append((word, None))
 
     # cycles through all tagged words
     # if there is no wn tag, it does nothing
     # if there is a tag, it lemmatizes
     output = []
-    for (word, tag) in wnTags:
+    for (word, tag) in wn_tags:
         if tag == None:
             output.append(word)
         else:
