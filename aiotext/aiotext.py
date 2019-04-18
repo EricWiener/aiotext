@@ -5,24 +5,28 @@ from pycontractions import Contractions  # expand contractions
 from aiotext.lemmatize import lemmatize
 import re  # regex
 import string  # string helper Library
-from aiotext.splitToSentences import split_into_sentences
+from nltk import sent_tokenize, word_tokenize
 import regex
 
 
 class Cleaner:
-    def __init__(self, options={'expand_contractions': True,
-                                'strip_text_in_brackets': False,
-                                "combine_concatenations": False,
-                                "w2v_path": None,
-                                "api_key": "word2vec-google-news-300",
-                                }):
-        self.options = options
+    def __init__(self,
+                 expand_contractions=True,
+                 strip_text_in_brackets=False,
+                 combine_concatenations=False,
+                 w2v_path=None,
+                 api_key="word2vec-google-news-300",
+                 ):
 
-        if options['expand_contractions']:
+        self.opt_expand_contractions = expand_contractions
+        self.opt_strip_text_in_brackets = strip_text_in_brackets
+        self.opt_combine_concatenations = combine_concatenations
+
+        if expand_contractions:
             print("Loading contractions dataset (this will take a while the first time)")
 
             # Load your favorite word2vec model
-            self.cont = Contractions(w2v_path=options["w2v_path"], api_key=options["api_key"])
+            self.cont = Contractions(w2v_path=w2v_path, api_key=api_key)
             print("Contractions dataset downloaded")
 
             print("Training contractions model (this will take a while)")
@@ -69,31 +73,31 @@ class Cleaner:
 
         return res
 
-    def combine_concatenations(self, text):
+    def combine_concatenations(self, sentence):
+        """
+        Recieves string sentence
+        "This is a sentence"
+        """
         # convert concatenated words into seperate words
         # georgetown-louisville becomes georgetown louisville
-        if self.options['combine_concatenations']:
-            # matches all types of dashes
-            # https://www.compart.com/en/unicode/category/Pd
-            text = regex.sub(r'\p{Pd}+', '', text)
+
+        # Pd matches all types of dashes
+        # https://www.compart.com/en/unicode/category/Pd
+
+        if self.opt_combine_concatenations:
+            def _refu(sent): return regex.sub(r'\p{Pd}+', '', sent)
         else:
-            # matches all types of dashes
-            # https://www.compart.com/en/unicode/category/Pd
-            text = regex.sub(r'\p{Pd}+', ' ', text)
+            def _refu(sent): return regex.sub(r'\p{Pd}+', ' ', sent)
 
-        return text
+        return _refu(sentence)
 
-    def split_sentences(self, text):
-        """
-        Returns: list of sentences
-        """
-        # split into list of sentences
-        return split_into_sentences(text)
-
-    def remove_non_english(self, sentences):
+    def remove_non_english(self, tokens):
         """
         Removes non-english words and all punctuation and numbers
         Removes extra white space
+
+        Recieves list of tokens comprising a single sentence:
+        ['this', 'is', 'a', 'sentence']
         """
         # remove all punctuation (removes non-english words too)
         # stripped = re.sub('[^a-zA-Z\s]*', '', stripped)
@@ -101,24 +105,13 @@ class Cleaner:
         # removes extra white spaces
         # stripped = re.sub('[ ]{2,}',' ', stripped)
 
-        stripped_sentences = []
-        for sentence in sentences:
-            cleaned = re.sub('[ ]{2,}', ' ', re.sub('[^a-zA-Z\s]*', '', sentence))
+        cleaned_tokens = []
+        for token in tokens:
+            cleaned = re.sub('[ ]{2,}', ' ', re.sub('[^a-zA-Z\s]*', '', token)).strip()
             if len(cleaned) != 0:
-                stripped_sentences.append(cleaned)
+                cleaned_tokens.append(cleaned)
 
-        return stripped_sentences
-
-    def tokenize_sentences(self, sentences):
-        # tokenize:
-        # this will be a 2 dimensional list
-        # [['this', 'is', 'sentence'],
-        # ['this', 'is', 'another']
-        # ['this', 'is', 'another']]
-        tokenized_sentences = []
-        for sentence in sentences:
-            tokenized_sentences.append(sentence.split())
-        return tokenized_sentences
+        return cleaned_tokens
 
     def lemmatize_sentences(self, tokenized_sentences):
         """
@@ -142,17 +135,17 @@ class Cleaner:
     def clean(self, text):
         text = text.lower()
 
-        if self.options["expand_contractions"]:
+        if self.opt_expand_contractions:
             # Expands it's -> it is
             text = self.expand_contractions(text)
 
-        if self.options["strip_text_in_brackets"]:
+        if self.opt_strip_text_in_brackets:
             text = self.strip_brackets(text)
 
-        text = self.combine_concatenations(text)
-        sentences = self.split_sentences(text)
-        cleaned_sentences = self.remove_non_english(sentences)
-        tokenized_cleaned_sentences = self.tokenize_sentences(cleaned_sentences)
-        lemmatized_tokenized_sentences = self.lemmatize_sentences(tokenized_cleaned_sentences)
+        sentences = sent_tokenize(text)
+        sentences = [self.combine_concatenations(sentence) for sentence in sentences]
+        tokens_per_sentence = [word_tokenize(sent) for sent in sentences]
+        lemmatized_tokens_per_sent = self.lemmatize_sentences(tokens_per_sentence)
+        cleaned_tokens_per_sent = [self.remove_non_english(sent) for sent in lemmatized_tokens_per_sent]
 
-        return lemmatized_tokenized_sentences
+        return cleaned_tokens_per_sent
