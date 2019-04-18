@@ -10,14 +10,19 @@ import regex
 
 
 class Cleaner:
-    def __init__(self, options={'expand_contractions': True, 'strip_text_in_brackets': False, "combine_concatenations": False, }):
+    def __init__(self, options={'expand_contractions': True,
+                                'strip_text_in_brackets': False,
+                                "combine_concatenations": False,
+                                "w2v_path": None,
+                                "api_key": "word2vec-google-news-300",
+                                }):
         self.options = options
 
         if options['expand_contractions']:
             print("Loading contractions dataset (this will take a while the first time)")
 
             # Load your favorite word2vec model
-            self.cont = Contractions(api_key="glove-twitter-100")
+            self.cont = Contractions(w2v_path=options["w2v_path"], api_key=options["api_key"]
             print("Contractions dataset downloaded")
 
             print("Training contractions model (this will take a while)")
@@ -26,8 +31,8 @@ class Cleaner:
             print("Contraction model successfully trained")
 
     def expand_contractions(self, text):
-        text = text.replace("’", "'")  # need to put in the correct apostrophe
-        expanded_text = list(self.cont.expand_texts([text], precise=True))
+        text=text.replace("’", "'")  # need to put in the correct apostrophe
+        expanded_text=list(self.cont.expand_texts([text], precise=True))
         return expanded_text[0]
 
     def strip_brackets(self, text):
@@ -41,26 +46,26 @@ class Cleaner:
             'hello (there) you (my[best] friend) lets {dine } }' -> 'hello  you  lets  }'
         """
 
-        brace_open_type = ""
-        brace_pair = {
+        brace_open_type=""
+        brace_pair={
             '(': ')',
             '[': ']',
             '{': '}'
         }
-        open_brace_list = list(brace_pair.keys())
+        open_brace_list=list(brace_pair.keys())
 
-        res = ""
+        res=""
         for c in text:
             if len(brace_open_type) == 0:
                 # not opened
                 if c in open_brace_list:
-                    brace_open_type = c
+                    brace_open_type=c
                 else:
                     res += c
             else:
                 # opened
                 if brace_pair[brace_open_type] == c:
-                    brace_open_type = ""
+                    brace_open_type=""
 
         return res
 
@@ -70,11 +75,11 @@ class Cleaner:
         if self.options['combine_concatenations']:
             # matches all types of dashes
             # https://www.compart.com/en/unicode/category/Pd
-            text = regex.sub(r'\p{Pd}+', '', text)
+            text=regex.sub(r'\p{Pd}+', '', text)
         else:
             # matches all types of dashes
             # https://www.compart.com/en/unicode/category/Pd
-            text = regex.sub(r'\p{Pd}+', ' ', text)
+            text=regex.sub(r'\p{Pd}+', ' ', text)
 
         return text
 
@@ -96,9 +101,9 @@ class Cleaner:
         # removes extra white spaces
         # stripped = re.sub('[ ]{2,}',' ', stripped)
 
-        stripped_sentences = []
+        stripped_sentences=[]
         for sentence in sentences:
-            cleaned = re.sub('[ ]{2,}', ' ', re.sub('[^a-zA-Z\s]*', '', sentence))
+            cleaned=re.sub('[ ]{2,}', ' ', re.sub('[^a-zA-Z\s]*', '', sentence))
             if len(cleaned) != 0:
                 stripped_sentences.append(cleaned)
 
@@ -110,7 +115,7 @@ class Cleaner:
         # [['this', 'is', 'sentence'],
         # ['this', 'is', 'another']
         # ['this', 'is', 'another']]
-        tokenized_sentences = []
+        tokenized_sentences=[]
         for sentence in sentences:
             tokenized_sentences.append(sentence.split())
         return tokenized_sentences
@@ -128,26 +133,26 @@ class Cleaner:
                 ['this', 'is', 'anoth']
                 ['this', 'is', 'anoth']]
         """
-        lemmatized_sentences = []
+        lemmatized_sentences=[]
         for sentence in tokenized_sentences:
             lemmatized_sentences.append(lemmatize(sentence))
         # lemmatized_sentences = [lemmatize(sentence) for sentence in tokenized_sentences]
         return lemmatized_sentences
 
     def clean(self, text):
-        text = text.lower()
+        text=text.lower()
 
         if self.options["expand_contractions"]:
             # Expands it's -> it is
-            text = self.expand_contractions(text)
+            text=self.expand_contractions(text)
 
         if self.options["strip_text_in_brackets"]:
-            text = self.strip_brackets(text)
+            text=self.strip_brackets(text)
 
-        text = self.combine_concatenations(text)
-        sentences = self.split_sentences(text)
-        cleaned_sentences = self.remove_non_english(sentences)
-        tokenized_cleaned_sentences = self.tokenize_sentences(cleaned_sentences)
-        lemmatized_tokenized_sentences = self.lemmatize_sentences(tokenized_cleaned_sentences)
+        text=self.combine_concatenations(text)
+        sentences=self.split_sentences(text)
+        cleaned_sentences=self.remove_non_english(sentences)
+        tokenized_cleaned_sentences=self.tokenize_sentences(cleaned_sentences)
+        lemmatized_tokenized_sentences=self.lemmatize_sentences(tokenized_cleaned_sentences)
 
         return lemmatized_tokenized_sentences

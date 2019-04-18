@@ -39,6 +39,13 @@ cleaner_options = {
     # if false replaces hyphen with space (george-louis -> george louis).
     # if true just replaces hyphen (george-louis -> georgelouis)
     "combine_concatenations": False,  
+
+    # path to word2vec binary
+    "w2v_path": None,
+
+    # you can also specify the api key to download
+    # The default is word2vec-google-news-300
+    "api_key": "word2vec-google-news-300",
 }
 cleaner = Cleaner(cleaner_options)
 
@@ -65,3 +72,4 @@ python3
 - 1.0.0: Initial release
 - 1.0.1: Corrected handling of sentences without punctuation and brackets
 - 1.0.2: Added modified contraction expander download. Also made changes to solve [issue](https://github.com/nltk/nltk/issues/2269) with NLTK lemmatizer.
+- 1.0.3: Added options for specifying word2vec model to use for contraction expansion
