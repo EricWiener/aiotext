@@ -4,7 +4,7 @@ This package was created to speed up the process of cleaning text for natural la
 - Expands contractions using [pycontractions](https://pypi.org/project/pycontractions/) trained on the glove-twitter-100 word2vec training set (optional)
 - Removes text in brackets. Matches "()","[]", or "{}" (optional)
 - Combines concatenations (turns "georgetown-louisville" into "georgetown louisville" or "georgetownlousivelle"). Matches all types of hyphens.
-- Very smartly splits sentences on punctuation using algorithm defined in [this stackoverflow post](https://stackoverflow.com/a/31505798/6942666).
+- Splits sentences on punctuation using algorithm defined in [this stackoverflow post](https://stackoverflow.com/a/31505798/6942666).
 - Tokenizes sentences.
 - Lemmatizes tokens using NLTK WordNetLemmatizer and a lookup table between Penn Bank tags and Word Net.
 

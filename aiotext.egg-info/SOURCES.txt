@@ -1,0 +1,11 @@
+README.md
+setup.py
+aiotext/__init__.py
+aiotext/aiotext.py
+aiotext/lemmatize.py
+aiotext/test_aiotext.py
+aiotext.egg-info/PKG-INFO
+aiotext.egg-info/SOURCES.txt
+aiotext.egg-info/dependency_links.txt
+aiotext.egg-info/requires.txt
+aiotext.egg-info/top_level.txt
